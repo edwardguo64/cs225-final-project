@@ -11,11 +11,11 @@ all : $(EXENAME)
 $(EXENAME) : $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(EXENAME)
 
-main.o : main.cpp intro.h cs225/PNG.h cs225/HSLAPixel.h
+main.o : main.cpp Graph.h cs225/PNG.h cs225/HSLAPixel.h
 	$(CXX) $(CXXFLAGS) main.cpp
 
-graph.o : graph.cpp graph.h
-	$(CXX) $(CXXFLAGS) graph.cpp
+Graph.o : Graph.cpp Graph.h
+	$(CXX) $(CXXFLAGS) Graph.cpp
 
 PNG.o : cs225/PNG.cpp cs225/PNG.h cs225/HSLAPixel.h cs225/lodepng/lodepng.h
 	$(CXX) $(CXXFLAGS) cs225/PNG.cpp
