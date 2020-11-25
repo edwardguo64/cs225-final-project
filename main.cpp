@@ -5,7 +5,7 @@
 
 int main()
 {
-    Graph g("test_airports.dat", "test_routes.dat");
+    Graph g("data/airports.dat", "data/routes.dat");
     g.printVertex();
     g.printEdge();
     return 0;

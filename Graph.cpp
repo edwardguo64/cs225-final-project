@@ -48,14 +48,29 @@ void Graph::parseAirport(const string & filename)
             else if(counter == 1)
             {
                 name = data;
+                // Check if the name has a comma in it
+                while (data[data.size() - 1] != '\"') {
+                    getline(file, data, ',');
+                    name += "," + data;
+                }
             }
             else if(counter == 2)
             {
                 city = data;
+                // Check if the name has a comma in it
+                while (data[data.size() - 1] != '\"') {
+                    getline(file, data, ',');
+                    name += "," + data;
+                }
             }
             else if(counter == 3)
             {
                 country = data;
+                // Check if the name has a comma in it
+                while (data[data.size() - 1] != '\"') {
+                    getline(file, data, ',');
+                    name += "," + data;
+                }
             }
             else if(counter == 4)
             {
@@ -67,6 +82,7 @@ void Graph::parseAirport(const string & filename)
             }
             else if(counter == 6)
             {
+
                 latitude = std::stod(data);
             }
             else if(counter == 7)
@@ -235,4 +251,5 @@ void Graph::printEdge()
     {
         std::cout << it->firstID_->airportID_ << " connected to " << it->secondID_->airportID_ << ". Weight = " << it->weight_ << std::endl;
     }
+    std::cout << "Number of airports: " << adjacency_list_.size() << std::endl;
 }
