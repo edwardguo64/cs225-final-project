@@ -6,6 +6,21 @@ Graph::Graph(const string & airport, const string & route)
     parseRoute(route);
 }
 
+/* Pulled from: https://www.geeksforgeeks.org/program-distance-two-points-earth/ 
+ * Returns distance in km
+ */
+double Graph::distance(double lat1, double long1, double lat2, double long2) {
+    double lat1rad = lat1 / 180 * M_PI;
+    double long1rad = long1 / 180 * M_PI;
+    
+    double lat2rad = lat2 / 180 * M_PI;
+    double long2rad = long2 / 180 * M_PI;
+
+    double longdif = long2rad - long1rad;
+
+    return 3963.0 * acos((sin(lat1rad) * sin(lat2rad)) + cos(lat1rad) * cos(lat2rad) * cos(longdif)) * 1.609344;
+}
+
 void Graph::parseAirport(const string & filename)
 {
 
@@ -57,7 +72,7 @@ void Graph::parseAirport(const string & filename)
             else if(counter == 7)
             {
                 longitude = std::stod(data);
-                insertVertex(Vertex(airportID, name, city, country, IATA, ICAO, latitude, longitude, 0));
+                insertVertex(Vertex(airportID, name, city, country, IATA, ICAO, latitude, longitude));
                 // Move onto next line.
                 getline(file, data);
                 counter = 0;
@@ -108,7 +123,10 @@ void Graph::parseRoute(const string & filename)
                 {
                     secondID = std::stoi(data);
                 }
-                insertEdge(firstID, secondID, 0);
+                Vertex first_vertex = converter_.find(firstID)->second;
+                Vertex second_vertex = converter_.find(secondID)->second;
+                insertEdge(firstID, secondID, distance(first_vertex.latitude_, first_vertex.longitude_, 
+                                                        second_vertex.latitude_, second_vertex.longitude_));
 
                 getline(file, data);
                 counter = 0;
@@ -149,33 +167,64 @@ void Graph::insertEdge(int first, int second, double weight)
     {
         return;
     }
-    Edge e(&(converter_.find(first)->second), &(converter_.find(second)->second), weight);
-    
 
-    // Compute weight.
+    Vertex first_vertex = converter_.find(first)->second;
+    Vertex second_vertex = converter_.find(second)->second;
 
+    Edge e(&(adjacency_list_.find(first_vertex)->first), &(adjacency_list_.find(second_vertex)->first), weight);
     edge_list_.push_back(e);
+    
+    degree_map_[first_vertex]++;
+    degree_map_[second_vertex]++;
+    adjacency_list_.find(first_vertex)->second.push_back(&edge_list_.back());
+    adjacency_list_.find(second_vertex)->second.push_back(&edge_list_.back());
+
+
 }
 
 bool Graph::areAdjacent(const Vertex & v1, const Vertex & v2)
 {
+    
+    if(degree_map_[v1] <= degree_map_[v2]) {
+        // Search v1's adjacency list
+        list<Edge *> adj = adjacency_list_.find(v1)->second;
+        for(auto iter = adj.begin(); iter != adj.end(); ++iter) {
+            Edge * edge = *iter;
+            // Found corresponding edge
+            if(edge->firstID_->airportID_ == v2.airportID_ || edge->secondID_->airportID_ == v2.airportID_) {
+                return true;
+            } 
+        }
+    } else {
+
+        // Search v2's adjacency list
+        list<Edge *> adj = adjacency_list_.find(v2)->second;
+        for(auto iter = adj.begin(); iter != adj.end(); ++iter) {
+            Edge * edge = *iter;
+            // Found corresponding edge
+            if(edge->firstID_->airportID_ == v1.airportID_ || edge->secondID_->airportID_ == v1.airportID_) {
+                return true;
+            } 
+        }
+    }
     return false;
 }
 
 list<Graph::Edge *> Graph::incidentEdges(const Vertex & v)
 {
-    return list<Edge *>();
+    return adjacency_list_[v];
 }
 
 void Graph::printVertex()
 {
     for(auto it = adjacency_list_.begin(); it != adjacency_list_.end(); it++)
     {
-        std::cout << it->first.airportID_ << " is adjacent to ";
+        std::cout << it->first.airportID_ << " has degree " << degree_map_[it->first] << ". ";
+        std::cout << it->first.airportID_ << " is adjacent to: " << std::endl;
         
-        for(auto it2 = it->second.begin(); it2 != it->second.end(); it2++)
-        {
-            std::cout << "(" << (*it2)->firstID_->airportID_ << ", " << (*it2)->secondID_->airportID_ <<  ") " << std::endl;
+        list<Edge *> adj = incidentEdges(it->first);
+        for(Edge * edge : adj) {
+            std::cout << "(" << edge->firstID_->airportID_ << ", " << edge->secondID_->airportID_ << ") " << std::endl;
         }
     }
 }
@@ -184,6 +233,6 @@ void Graph::printEdge()
 {
     for(auto it = edge_list_.begin(); it != edge_list_.end(); it++)
     {
-        std::cout << it->firstID_->airportID_ << " connected to " << it->secondID_->airportID_ << std::endl;
+        std::cout << it->firstID_->airportID_ << " connected to " << it->secondID_->airportID_ << ". Weight = " << it->weight_ << std::endl;
     }
 }
