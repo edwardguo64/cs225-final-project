@@ -179,7 +179,7 @@ void Graph::insertEdge(int first, int second, double weight)
         return;
     }
 
-    if(areAdjacent(converter_.find(first)->second, converter_.find(second)->second))
+    if(areAdjacent(converter_.find(first)->second, converter_.find(second)->second) != NULL)
     {
         return;
     }
@@ -198,7 +198,7 @@ void Graph::insertEdge(int first, int second, double weight)
 
 }
 
-bool Graph::areAdjacent(const Vertex & v1, const Vertex & v2)
+Graph::Edge* Graph::areAdjacent(const Vertex & v1, const Vertex & v2)
 {
     
     if(degree_map_[v1] <= degree_map_[v2]) {
@@ -208,7 +208,7 @@ bool Graph::areAdjacent(const Vertex & v1, const Vertex & v2)
             Edge * edge = *iter;
             // Found corresponding edge
             if(edge->firstID_->airportID_ == v2.airportID_ || edge->secondID_->airportID_ == v2.airportID_) {
-                return true;
+                return edge;
             } 
         }
     } else {
@@ -219,16 +219,155 @@ bool Graph::areAdjacent(const Vertex & v1, const Vertex & v2)
             Edge * edge = *iter;
             // Found corresponding edge
             if(edge->firstID_->airportID_ == v1.airportID_ || edge->secondID_->airportID_ == v1.airportID_) {
-                return true;
+                return edge;
             } 
         }
     }
-    return false;
+    return NULL;
 }
 
 list<Graph::Edge *> Graph::incidentEdges(const Vertex & v)
 {
     return adjacency_list_[v];
+}
+
+double Graph::getWeight(const Graph::Edge & e) {
+    return e.weight_;
+}
+
+vector<Graph::Vertex> Graph::getVertices() {
+    vector<Vertex> ret;
+
+    for(auto it = adjacency_list_.begin(); it != adjacency_list_.end(); ++it)
+    {
+        ret.push_back(it->first);
+    }
+
+    return ret;
+}
+
+vector<Graph::Edge *> Graph::getEdges() {
+    if (edge_list_.empty()) {
+        return vector<Graph::Edge *>();
+    }
+
+    vector<Edge*> ret;
+
+    for (auto it = edge_list_.begin(); it != edge_list_.end(); ++it) {
+        ret.push_back(&(*it));
+    }
+
+    return ret;
+}
+
+vector<Graph::Vertex> Graph::getAdjacent(const Vertex & v) {
+    vector<Vertex> ret;
+    list<Graph::Edge *> edges = incidentEdges(v);
+
+    for (auto it = edges.begin(); it != edges.end(); ++it) {
+        if (*((*it)->firstID_) == v) {
+            ret.push_back(*((*it)->secondID_));
+        } else {
+            ret.push_back(*((*it)->firstID_));
+        }
+    }
+    return ret;
+}
+
+Graph::v_label Graph::getVLabel(const Vertex & v) {
+    return vertex_labels_[v];
+}
+
+void Graph::setVLabel(Vertex & v, v_label label) {
+    vertex_labels_[v] = label;
+}
+
+Graph::e_label Graph::getELabel(const Edge *e) {
+    return e->label_;
+}
+
+void Graph::setELabel(Edge *e, e_label label) {
+    e->label_ = label;
+}
+
+void Graph::BFS() {
+    for (Vertex & v : getVertices()) {
+        setVLabel(v, UNEXPLORED);
+    }
+
+    for (Edge *e : getEdges()) {
+        setELabel(e, UNDISCOVERED);
+    }
+
+    for (Vertex & v : getVertices()) {
+        if (getVLabel(v) == UNEXPLORED) {
+            BFS(v);
+        }
+    }
+}
+
+void Graph::BFS(Vertex & v) {
+    queue<Vertex> q;
+    setVLabel(v, VISITED);
+    q.push(v);
+
+    while (!q.empty()) {
+        v = q.front();
+        q.pop();
+        // cout << v.airportID_ << " is labeled " << vertex_labels_[v] << endl;
+        for (Vertex w : getAdjacent(v)) {
+            if (getVLabel(w) == UNEXPLORED) {
+                setELabel(areAdjacent(v, w), DISCOVERY);
+                setVLabel(w, VISITED);
+                q.push(w);
+            } else if (getELabel(areAdjacent(v, w)) == UNDISCOVERED) {
+                setELabel(areAdjacent(v, w), CROSS);
+            }
+        }
+    }
+    // for (auto it = edge_list_.begin(); it != edge_list_.end(); ++it) {
+    //     cout << "Edge (" << it->firstID_->airportID_ << ", " << it->secondID_->airportID_ << ") is labeled " << it->label_ << endl;
+    // }
+}
+
+void Graph::DFS() {
+    for (Vertex & v : getVertices()) {
+        setVLabel(v, UNEXPLORED);
+    }
+
+    for (Edge *e : getEdges()) {
+        setELabel(e, UNDISCOVERED);
+    }
+
+    for (Vertex & v : getVertices()) {
+        if (getVLabel(v) == UNEXPLORED) {
+            DFS(v);
+        }
+    }
+}
+
+void Graph::DFS(Vertex & v) {
+    stack<Vertex> s;
+    setVLabel(v, VISITED);
+    s.push(v);
+
+    while (!s.empty()) {
+        v = s.top();
+        s.pop();
+        // cout << v.airportID_ << " is labeled " << vertex_labels_[v] << endl;
+        for (Vertex w : getAdjacent(v)) {
+            if (getVLabel(w) == UNEXPLORED) {
+                setELabel(areAdjacent(v, w), DISCOVERY);
+                setVLabel(w, VISITED);
+                s.push(w);
+            } else if (getELabel(areAdjacent(v, w)) == UNDISCOVERED) {
+                setELabel(areAdjacent(v, w), CROSS);
+            }
+        }
+    }
+    // for (auto it = edge_list_.begin(); it != edge_list_.end(); ++it) {
+    //     cout << "Edge (" << it->firstID_->airportID_ << ", " << it->secondID_->airportID_ << ") is labeled " << it->label_ << endl;
+    // }
 }
 
 void Graph::printVertex()
