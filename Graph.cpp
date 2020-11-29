@@ -39,57 +39,47 @@ void Graph::parseAirport(const string & filename)
     
     if(file.is_open())
     {
-        while(getline(file, data,','))
-        {
-            if(counter == 0)
-            {
+        while(getline(file, data,',')){     //stores comma-separated strings in data till end of file
+            if(counter == 0){
                 airportID = std::stoi(data);
             }
-            else if(counter == 1)
-            {
+            else if(counter == 1){
                 name = data;
                 // Check if the name has a comma in it
-                while (data[data.size() - 1] != '\"') {
-                    getline(file, data, ',');
-                    name += "," + data;
+                while (data[data.size() - 1] != '\"') { //until the last char of data is "
+                    getline(file, data, ',');           //read and store next piece of comma-separated string 
+                    name += "," + data;                 //concatenate to include entire string between " "
                 }
             }
-            else if(counter == 2)
-            {
+            else if(counter == 2){
                 city = data;
-                // Check if the name has a comma in it
+                // Check if the city has a comma in it
                 while (data[data.size() - 1] != '\"') {
                     getline(file, data, ',');
                     name += "," + data;
                 }
             }
-            else if(counter == 3)
-            {
+            else if(counter == 3){
                 country = data;
-                // Check if the name has a comma in it
+                // Check if the country has a comma in it
                 while (data[data.size() - 1] != '\"') {
                     getline(file, data, ',');
                     name += "," + data;
                 }
             }
-            else if(counter == 4)
-            {
+            else if(counter == 4){
                 IATA = data;
             }
-            else if(counter == 5)
-            {
+            else if(counter == 5){
                 ICAO = data;
             }
-            else if(counter == 6)
-            {
-
+            else if(counter == 6){
                 latitude = std::stod(data);
             }
-            else if(counter == 7)
-            {
+            else if(counter == 7){
                 longitude = std::stod(data);
                 insertVertex(Vertex(airportID, name, city, country, IATA, ICAO, latitude, longitude));
-                // Move onto next line.
+                // Move on to next line to disregard irrelevant data.
                 getline(file, data);
                 counter = 0;
                 continue;
@@ -110,35 +100,28 @@ void Graph::parseRoute(const string & filename)
     int firstID;
     int secondID;
 
-    if(file.is_open())
-    {
-        while(getline(file, data,','))
-        {
-            if(counter == 3)
-            {
-                if(data == "\\N")
-                {
+    if(file.is_open()){
+        while(getline(file, data,',')){ //stores comma-separated strings in data till end of file
+            if(counter == 3){           //stores fourth entry (route's source airport) of each line
+                if(data == "\\N"){      //if invalid entry, move on to next line
                     getline(file, data);
                     counter = 0;
                     continue;
                 }
-                else
-                {
+                else{
                     firstID = std::stoi(data);
                 }
             }
-            else if(counter == 5)
-            {
-                if(data == "\\N")
-                {
+            else if(counter == 5){      //stores sixth entry (route's destination airport) of each line
+                if(data == "\\N"){      //if invalid entry, move on to next line
                     getline(file, data);
                     counter = 0;
                     continue;
                 }
-                else
-                {
+                else{
                     secondID = std::stoi(data);
                 }
+                //converts airport ID int to identify specific airport vertex
                 Vertex first_vertex = converter_.find(firstID)->second;
                 Vertex second_vertex = converter_.find(secondID)->second;
                 insertEdge(firstID, secondID, distance(first_vertex.latitude_, first_vertex.longitude_, 
@@ -169,29 +152,32 @@ void Graph::insertVertex(Vertex v)
 // Needs to check if either (u, v) or (v, u) is in the graph already.
 void Graph::insertEdge(int first, int second, double weight)
 {
-    if(converter_.find(first) == converter_.end())
+    //if first airport does not exist disregard
+    if(converter_.find(first) == converter_.end())  
     {
        return;
     }
-
-    if(converter_.find(second) == converter_.end())
+    //if second airport does not exist disregard
+    if(converter_.find(second) == converter_.end()) 
     {
         return;
     }
-
+    //if an edge already exists between these two airports disregard
     if(areAdjacent(converter_.find(first)->second, converter_.find(second)->second) != NULL)
     {
         return;
     }
-
+    //converts airport ID int to the actual airport Vertex
     Vertex first_vertex = converter_.find(first)->second;
     Vertex second_vertex = converter_.find(second)->second;
 
+    //creates a new edge between first and second airports
     Edge e(&(adjacency_list_.find(first_vertex)->first), &(adjacency_list_.find(second_vertex)->first), weight);
     edge_list_.push_back(e);
     
     degree_map_[first_vertex]++;
     degree_map_[second_vertex]++;
+    //updates edge list of both airports' adjacenecy lists
     adjacency_list_.find(first_vertex)->second.push_back(&edge_list_.back());
     adjacency_list_.find(second_vertex)->second.push_back(&edge_list_.back());
 
@@ -228,7 +214,7 @@ Graph::Edge* Graph::areAdjacent(const Vertex & v1, const Vertex & v2)
 
 list<Graph::Edge *> Graph::incidentEdges(const Vertex & v)
 {
-    return adjacency_list_[v];
+    return adjacency_list_[v]; //returns all the edges related to airport v
 }
 
 double Graph::getWeight(const Graph::Edge & e) {
@@ -237,7 +223,7 @@ double Graph::getWeight(const Graph::Edge & e) {
 
 vector<Graph::Vertex> Graph::getVertices() {
     vector<Vertex> ret;
-
+    //iterates through entire adjacency list to push all vertices into ret
     for(auto it = adjacency_list_.begin(); it != adjacency_list_.end(); ++it)
     {
         ret.push_back(it->first);
@@ -252,7 +238,7 @@ vector<Graph::Edge *> Graph::getEdges() {
     }
 
     vector<Edge*> ret;
-
+    //iterates through entire edge list to push all edge pointers into ret
     for (auto it = edge_list_.begin(); it != edge_list_.end(); ++it) {
         ret.push_back(&(*it));
     }
@@ -265,13 +251,15 @@ vector<Graph::Vertex> Graph::getAdjacent(const Vertex & v) {
     list<Graph::Edge *> edges = incidentEdges(v);
 
     for (auto it = edges.begin(); it != edges.end(); ++it) {
-        if (*((*it)->firstID_) == v) {
-            ret.push_back(*((*it)->secondID_));
+        //checks to see whether first airport of edge matches airport v
+        if (*((*it)->firstID_) == v) {  
+            //pushes other airport into vector
+            ret.push_back(*((*it)->secondID_)); 
         } else {
             ret.push_back(*((*it)->firstID_));
         }
     }
-    return ret;
+    return ret; //returns all airport vertices related to airport v
 }
 
 Graph::v_label Graph::getVLabel(const Vertex & v) {

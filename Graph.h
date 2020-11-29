@@ -26,6 +26,7 @@ class Graph
         enum v_label {UNEXPLORED, VISITED};
         enum e_label {UNDISCOVERED, DISCOVERY, CROSS};
 
+        //the Vertex struct contains all of the fundamental information regarding each airport
         typedef struct Vertex
         {
             int airportID_;
@@ -54,14 +55,16 @@ class Graph
 
         }Vertex;
         
-
+        /*the Edge struct is analagous to an airport route, which displays the relationship between 
+        two airport Vertices
+        */
         typedef struct Edge
         {
 
             const Vertex * firstID_;
             const Vertex * secondID_;
-            double weight_;
             e_label label_;
+            double weight_; //distance between the two related airports
 
             Edge(const Vertex * firstID, const Vertex * secondID, double weight = 0):
             firstID_(firstID), secondID_(secondID), weight_(weight)
@@ -71,16 +74,23 @@ class Graph
 
         }Edge;
 
-        map<int, Vertex> converter_;
-        map<Vertex, int> degree_map_;
-        map<Vertex, list<Edge *>> adjacency_list_;
-        list<Edge> edge_list_;
-        map<Vertex, v_label> vertex_labels_;
-    public:
+        
+        //maps an airportID # to its specific airport Vertex
+        map<int, Vertex> converter_;                
+        //maps a airport Vertex to its degree (however many other airports it is connected to)
+        map<Vertex, int> degree_map_;               
+        //maps an airport Vertex to a list of edge pointers (relationship with other airports)
+        map<Vertex, list<Edge *>> adjacency_list_;  
+        //list of all related airports
+        list<Edge> edge_list_;      
+        map<Vertex, v_label> vertex_labels_;                
 
+    public:
+        //graph constructor with airport and route data files passed in for parsing
         Graph(const string & airport, const string & route);
         void insertVertex(Vertex v);
         void insertEdge(int first, int second, double weight);
+        //returns a list of all related airports to the given airport Vertex
         list<Edge *> incidentEdges(const Vertex & v);
         Edge* areAdjacent(const Vertex & v1, const Vertex & v2);
         
@@ -90,6 +100,7 @@ class Graph
         void printVertex();
         void printEdge();
 
+        //helper function which returns the distance between two airports given their exact locations
         double distance(double lat1, double long1, double lat2, double long2);
 
         double getWeight(const Edge & e);
