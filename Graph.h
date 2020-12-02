@@ -19,12 +19,15 @@ using std::vector;
 using std::queue;
 #include <stack>
 using std::stack;
+#include <limits>
+
 
 class Graph
 {
     private:
         enum v_label {UNEXPLORED, VISITED};
         enum e_label {UNDISCOVERED, DISCOVERY, CROSS};
+
 
         // The Vertex struct contains all of the fundamental information regarding each airport.
         // Each airport has a unique airportID_ that is always defined.
@@ -38,16 +41,21 @@ class Graph
             string ICAO_;
             double latitude_;
             double longitude_;
+            bool visited_;
+            Vertex* prev_;
+            double Dij_distance_;
 
             Vertex(int airportID, string name, string city, string country, string IATA, string ICAO, double latitude, double longitude):
             airportID_(airportID), name_(name), city_(city), country_(country), IATA_(IATA), ICAO_(ICAO), latitude_(latitude), longitude_(longitude) 
             {
-
+                
             }
-            
+            bool operator>(const Vertex & other) const{
+                return Dij_distance_>other.Dij_distance_;
+            }
             bool operator<(const Vertex & other) const
             {
-                return airportID_ < other.airportID_;
+                return Dij_distance_<other.Dij_distance_;
             }
 
             bool operator==(const Vertex & other) const {
@@ -84,7 +92,9 @@ class Graph
         map<Vertex, list<Edge *>> adjacency_list_;  
         // List of all related airports
         list<Edge> edge_list_;      
-        map<Vertex, v_label> vertex_labels_;                
+        map<Vertex, v_label> vertex_labels_;
+        //these two maps are for Dijkstra's algorithm
+        map<Vertex, double> dist_from_source_;
 
     public:
         // Graph constructor with airport and route data filenames passed in for parsing.
@@ -129,4 +139,6 @@ class Graph
 
         void DFS();
         void DFS(Vertex & v);
+
+        vector<Vertex> Dijkstra(int source, int destination);
 };

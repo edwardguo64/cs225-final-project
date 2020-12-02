@@ -380,3 +380,44 @@ void Graph::printEdge()
     }
     std::cout << "Number of airports: " << adjacency_list_.size() << std::endl;
 }
+
+vector<Graph::Vertex> Graph::Dijkstra(int source, int dest){
+    Vertex v_source=converter_.find(source)->second;
+    Vertex v_dest=converter_.find(dest)->second;
+    std::priority_queue <Vertex, vector<Vertex>, std::greater<Vertex>> Q; 
+
+    //loop through all vertices to initialize priority queue
+    for (Vertex & v : getVertices()) {
+        v.Dij_distance_=std::numeric_limits<double>::infinity();
+        if(v==v_source){
+            v.Dij_distance_=0;
+        }
+        v.prev_=NULL;
+        std::pair<Vertex,double> ret(v,v.Dij_distance_);
+        dist_from_source_.insert(ret);
+        v.visited_=false;
+        Q.push(v);
+    }
+    //go through all of priority queue and visit each neighboring vertex
+    while(!Q.empty()){
+        Vertex current=Q.top();
+        Q.pop();
+        current.visited_=true;
+        for (Vertex w : getAdjacent(current)) {
+            if(w.visited_==false){
+                Edge* e=areAdjacent(w,current);
+                double alt = current.Dij_distance_ + e->weight_;
+                if(w.Dij_distance_>alt){
+                    w.Dij_distance_=alt;
+                    w.prev_=&current;
+                }
+            }
+           
+        }
+
+
+    }
+
+    
+    
+}
