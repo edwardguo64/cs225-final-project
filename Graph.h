@@ -24,7 +24,7 @@ using std::stack;
 
 class Graph
 {
-    private:
+    public:
         enum v_label {UNEXPLORED, VISITED};
         enum e_label {UNDISCOVERED, DISCOVERY, CROSS};
 

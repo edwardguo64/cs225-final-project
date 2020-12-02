@@ -405,13 +405,13 @@ list<Graph::Vertex> Graph::Dijkstra(int source, int dest){
             break;
         }
         current.visited_=true;
-        for (Vertex w : getAdjacent(current)) {
+        for (Vertex & w : getAdjacent(current)) {
             if(w.visited_==false){
                 Edge* e=areAdjacent(w,current);
                 double alt = current.Dij_distance_ + e->weight_;
                 if(w.Dij_distance_>alt){
                     w.Dij_distance_=alt;
-                    w.prev_=&current;
+                    w.prev_=&(adjacency_list_.find(current)->first);
                     Q.push(w);
                 }
             }
