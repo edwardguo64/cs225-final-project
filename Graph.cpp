@@ -519,17 +519,17 @@ list<Graph::Vertex> Graph::Dijkstra(int sourceID, int destID)
     return ret;
     
 }
-// list<Graph::Vertex> Graph::landmark(int sourceID, int stopID, int destID){
-//     list<Vertex> first_route=Dijkstra(sourceID,stopID); //shortest route from source to stop
-//     list<Vertex>second_route=Dijkstra(stopID,destID);   //shortest route from stop to destination
-//     second_route.pop_front();
-//     for(auto it=second_route.begin();it!=second_route.end();++it) {
-//         first_route.push_back(*it); //combining second route to first to create path with detour
-//     }
-//     std::cout<<"Landmark path from "<<sourceID<<" to "<<destID<<" through "<<stopID<<": ";
-//     for(auto it=first_route.begin();it!=first_route.end();++it){
-//         std::cout<<it->airportID_<<" ";
-//     }
-//     std::cout<<endl;
-//     return first_route;
-// }
+list<Graph::Vertex> Graph::landmark(int sourceID, int stopID, int destID){
+    list<Vertex> first_route=Dijkstra(sourceID,stopID); //shortest route from source to stop
+    list<Vertex>second_route=Dijkstra(stopID,destID);   //shortest route from stop to destination
+    second_route.pop_front();
+    for(auto it=second_route.begin();it!=second_route.end();++it) {
+        first_route.push_back(*it); //combining second route to first to create path with detour
+    }
+    std::cout<<"Landmark path from "<<sourceID<<" to "<<destID<<" through "<<stopID<<": ";
+    for(auto it=first_route.begin();it!=first_route.end();++it){
+        std::cout<<it->airportID_<<" ";
+    }
+    std::cout<<endl;
+    return first_route;
+}

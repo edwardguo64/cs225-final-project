@@ -152,5 +152,5 @@ class Graph
         void DFS(Vertex & v);
 
         list<Vertex> Dijkstra(int sourceID, int destinationID);
-        // list<Vertex> landmark(int sourceID, int stopID, int destID);
+        list<Vertex> landmark(int sourceID, int stopID, int destID);
 };
