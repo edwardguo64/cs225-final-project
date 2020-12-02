@@ -6,6 +6,11 @@ Graph::Graph(const string & airport, const string & route)
     parseRoute(route);
 }
 
+Graph::Graph()
+{
+
+}
+
 /* Pulled from: https://www.geeksforgeeks.org/program-distance-two-points-earth/ 
  * Returns distance in km
  */
@@ -381,47 +386,136 @@ void Graph::printEdge()
     std::cout << "Number of airports: " << adjacency_list_.size() << std::endl;
 }
 
-list<Graph::Vertex> Graph::Dijkstra(int source, int dest){
-    Vertex v_source=converter_.find(source)->second;
-    Vertex v_dest=converter_.find(dest)->second;
-    list<Vertex> path;
-    std::priority_queue <Vertex, vector<Vertex>, std::greater<Vertex>> Q; 
+list<Graph::Vertex> Graph::Dijkstra(int sourceID, int destID)
+{
+    // Source Vertex
+    Vertex v_source = converter_.find(sourceID)->second;
+    // Destination Vertex
+    Vertex v_dest = converter_.find(destID)->second;
 
-    //loop through all vertices to initialize priority queue
-    for (Vertex & v : getVertices()) {
-        v.Dij_distance_=std::numeric_limits<double>::infinity();
-        if(v==v_source){
-            v.Dij_distance_=0;
+    // The shortest path between source and destination vertex.
+    list<Vertex> ret;
+    // Defined struct to be the element inside priority_queue.
+    typedef struct pq_elem
+    {
+        Vertex v_;
+        double dist_;
+
+        pq_elem(Vertex v, double dist)
+        {
+            v_ = v;
+            dist_ = dist;
         }
-        v.prev_=NULL;
-        v.visited_=false;
-        Q.push(v);
+        
+        bool operator>(const pq_elem & other) const
+        {
+            return dist_ > other.dist_;
+        }
+        
+        bool operator<(const pq_elem & other) const
+        {
+            return dist_ < other.dist_;
+        }
+
+        bool operator==(const pq_elem & other) const
+        {
+            return dist_ == other.dist_;
+        }
+    }pq_elem;
+
+    map<Vertex, double> vertex_to_dist;
+    map<Vertex, Vertex> vertex_to_prev;
+    map<Vertex, bool> vertex_to_visited;
+
+    // dist[source] ← 0
+    vertex_to_dist.insert(std::pair<Vertex, double>(v_source, 0));
+    vertex_to_prev.insert(std::pair<Vertex, Vertex>(v_source, v_source));
+    vertex_to_visited.insert(std::pair<Vertex, bool>(v_source, false));
+
+    // create vertex priority queue Q
+    std::priority_queue <pq_elem, vector<pq_elem>, std::greater<pq_elem>> Q;
+
+    // for each vertex v in Graph:
+    vector<Vertex> all_v = getVertices();
+    for(auto it = all_v.begin(); it != all_v.end(); it++)
+    { 
+        // if v ≠ source
+        if(!(*it == v_source))
+        {
+            // dist[v] ← INFINITY
+            vertex_to_dist.insert(std::pair<Vertex, double>(*it, std::numeric_limits<double>::infinity()));
+            // prev[v] ← UNDEFINED
+            vertex_to_prev.insert(std::pair<Vertex, Vertex>(*it, *it));
+            vertex_to_visited.insert(std::pair<Vertex, bool>(*it, false));
+        }
+        Q.push(pq_elem(*it, vertex_to_dist.find(*it)->second));
     }
-    //go through all of priority queue and visit each neighboring vertex
-    while(Q.top().Dij_distance_!=std::numeric_limits<double>::infinity()){
-        Vertex current=Q.top();
+    // while Q is not empty:
+    while(Q.empty() == false)
+    {
+        // u ← Q.extract_min()
+        pq_elem u = Q.top();
         Q.pop();
-        if(current==v_dest){
-            break;
-        }
-        current.visited_=true;
-        for (Vertex & w : getAdjacent(current)) {
-            if(w.visited_==false){
-                Edge* e=areAdjacent(w,current);
-                double alt = current.Dij_distance_ + e->weight_;
-                if(w.Dij_distance_>alt){
-                    w.Dij_distance_=alt;
-                    w.prev_=&(adjacency_list_.find(current)->first);
-                    Q.push(w);
+        
+
+        // if p ≤ dist[u]
+        if(u.dist_ <= vertex_to_dist.find(u.v_)->second)
+        {
+            vertex_to_visited.find(u.v_)->second = true;
+
+                        
+            // TERMINAL CONDITION
+            // if u = target
+            if(u.v_ == v_dest)
+            {
+                break;
+            }
+            
+            // for each neighbor v of u:
+            for(Vertex & v : getAdjacent(u.v_))
+            {
+                if(vertex_to_visited.find(v)->second == false)
+                {
+                    // alt ← dist[u] + length(u, v)
+                    double alt = vertex_to_dist.find(u.v_)->second + areAdjacent(u.v_, v)->weight_;
+
+                    // if alt < dist[v]
+                    if(alt < vertex_to_dist.find(v)->second)
+                    {
+                        // dist[v] ← alt
+                        vertex_to_dist.find(v)->second = alt;
+                        // prev[v] ← u
+                        vertex_to_prev.find(v)->second = u.v_;
+                        // Q.decrease_priority(v, alt)
+                        Q.push(pq_elem(v, alt));
+                    }
                 }
             }
+
+
         }
     }
-    Vertex* temp=&v_dest;
-    while(temp!=NULL){
-        path.push_front(*temp);
-        temp=v_dest.prev_;
+    
+    Vertex curr = v_dest;
+    while(vertex_to_prev.find(curr)->second != vertex_to_prev.find(curr)->first)
+    {
+       ret.push_front(curr);
+       curr = vertex_to_prev.find(curr)->second;
     }
-    return path;
+    ret.push_front(v_source);
+
+    // Print the phyiscal distance of the shortest path.
+    std::cout << "Dijkstra Output::Shortest Path Physical Distance: " << vertex_to_dist.find(v_dest)->second << std::endl;
+
+    // Print all the vertices in the shortest path from source to destination.
+    std::cout << "Dijkstra Output::Vertices on Shortest Path: " << std::endl;
+    int counter = 1;
+    for(auto it = ret.begin(); it != ret.end(); ++it)
+    {
+        std::cout << "Vertex " << counter << " with ID: " << it->airportID_ << std::endl;
+        counter++;
+
+    }
+    return ret;
     
 }

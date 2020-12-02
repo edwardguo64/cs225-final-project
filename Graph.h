@@ -41,26 +41,37 @@ class Graph
             string ICAO_;
             double latitude_;
             double longitude_;
-            bool visited_;
-            Vertex* prev_;
-            double Dij_distance_;
 
             Vertex(int airportID, string name, string city, string country, string IATA, string ICAO, double latitude, double longitude):
             airportID_(airportID), name_(name), city_(city), country_(country), IATA_(IATA), ICAO_(ICAO), latitude_(latitude), longitude_(longitude) 
             {
                 
             }
-            bool operator>(const Vertex & other) const{
-                return Dij_distance_>other.Dij_distance_;
+
+            Vertex()
+            {
+
             }
+
+            bool operator>(const Vertex & other) const
+            {
+                return airportID_ > other.airportID_;
+            }
+
             bool operator<(const Vertex & other) const
             {
-                return Dij_distance_<other.Dij_distance_;
+                return airportID_ < other.airportID_;
             }
 
             bool operator==(const Vertex & other) const {
                 return airportID_ == other.airportID_;
             }
+
+            bool operator!=(const Vertex & other) const {
+                return airportID_ != other.airportID_;
+            }
+
+
 
         }Vertex;
         
@@ -97,6 +108,8 @@ class Graph
     public:
         // Graph constructor with airport and route data filenames passed in for parsing.
         Graph(const string & airport, const string & route);
+
+        Graph();
 
         // Insert a vertex into the graph.
         void insertVertex(Vertex v);
@@ -138,5 +151,5 @@ class Graph
         void DFS();
         void DFS(Vertex & v);
 
-        list<Vertex> Dijkstra(int source, int destination);
+        list<Vertex> Dijkstra(int sourceID, int destinationID);
 };
