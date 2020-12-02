@@ -37,5 +37,9 @@ int main()
     // Correctly returns path of length 0 with 1 vertex on the path.
     g.Dijkstra(1,1);
     g.Dijkstra(6,6);
+
+
+    g.landmark(2,5,4);
+    g.landmark(1,6,3);
     return 0;
 }
