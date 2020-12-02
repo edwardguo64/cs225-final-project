@@ -93,8 +93,6 @@ class Graph
         // List of all related airports
         list<Edge> edge_list_;      
         map<Vertex, v_label> vertex_labels_;
-        //these two maps are for Dijkstra's algorithm
-        map<Vertex, double> dist_from_source_;
 
     public:
         // Graph constructor with airport and route data filenames passed in for parsing.
@@ -140,5 +138,5 @@ class Graph
         void DFS();
         void DFS(Vertex & v);
 
-        vector<Vertex> Dijkstra(int source, int destination);
+        list<Vertex> Dijkstra(int source, int destination);
 };

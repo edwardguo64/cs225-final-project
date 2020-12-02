@@ -381,9 +381,10 @@ void Graph::printEdge()
     std::cout << "Number of airports: " << adjacency_list_.size() << std::endl;
 }
 
-vector<Graph::Vertex> Graph::Dijkstra(int source, int dest){
+list<Graph::Vertex> Graph::Dijkstra(int source, int dest){
     Vertex v_source=converter_.find(source)->second;
     Vertex v_dest=converter_.find(dest)->second;
+    list<Vertex> path;
     std::priority_queue <Vertex, vector<Vertex>, std::greater<Vertex>> Q; 
 
     //loop through all vertices to initialize priority queue
@@ -393,15 +394,16 @@ vector<Graph::Vertex> Graph::Dijkstra(int source, int dest){
             v.Dij_distance_=0;
         }
         v.prev_=NULL;
-        std::pair<Vertex,double> ret(v,v.Dij_distance_);
-        dist_from_source_.insert(ret);
         v.visited_=false;
         Q.push(v);
     }
     //go through all of priority queue and visit each neighboring vertex
-    while(!Q.empty()){
+    while(Q.top().Dij_distance_!=std::numeric_limits<double>::infinity()){
         Vertex current=Q.top();
         Q.pop();
+        if(current==v_dest){
+            break;
+        }
         current.visited_=true;
         for (Vertex w : getAdjacent(current)) {
             if(w.visited_==false){
@@ -410,14 +412,16 @@ vector<Graph::Vertex> Graph::Dijkstra(int source, int dest){
                 if(w.Dij_distance_>alt){
                     w.Dij_distance_=alt;
                     w.prev_=&current;
+                    Q.push(w);
                 }
             }
-           
         }
-
-
     }
-
-    
+    Vertex* temp=&v_dest;
+    while(temp!=NULL){
+        path.push_front(*temp);
+        temp=v_dest.prev_;
+    }
+    return path;
     
 }
