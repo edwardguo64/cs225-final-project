@@ -1,5 +1,5 @@
 EXENAME = airports
-OBJS = main.o Graph.o
+OBJS = main.o menu_helpers.o Graph.o
 
 CXX = clang++
 CXXFLAGS = $(CS225) -std=c++1y -stdlib=libc++ -c -g -O0 -Wall -Wextra -pedantic
@@ -11,8 +11,11 @@ all : $(EXENAME)
 $(EXENAME) : $(OBJS)
 	$(LD) $(OBJS) $(LDFLAGS) -o $(EXENAME)
 
-main.o : main.cpp Graph.h cs225/PNG.h cs225/HSLAPixel.h
+main.o : main.cpp menu_helpers.h Graph.h cs225/PNG.h cs225/HSLAPixel.h
 	$(CXX) $(CXXFLAGS) main.cpp
+
+menu_helpers.o : menu_helpers.cpp menu_helpers.h
+	$(CXX) $(CXXFLAGS) menu_helpers.cpp
 
 Graph.o : Graph.cpp Graph.h
 	$(CXX) $(CXXFLAGS) Graph.cpp
