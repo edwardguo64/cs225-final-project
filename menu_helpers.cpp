@@ -190,7 +190,7 @@ void cool_info(Graph & g)
 
     // displays the airport information
     cout << "\nAirport Name: " << v.name_ << endl;
-    cout << "Airport is located in : " << v.city_ << ", " << v.country_ << endl;
+    cout << "Airport is located in: " << v.city_ << ", " << v.country_ << endl;
     cout << "Airport has IATA code: " << v.IATA_ << endl;
     cout << "Airport has ICAO_ code: " << v.ICAO_ << endl;
     cout << "Airport has OpenFlights ID: " << v.airportID_ << endl;
