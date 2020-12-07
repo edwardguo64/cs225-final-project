@@ -20,12 +20,12 @@ are simplified to be traveled in a straight line.
 
 ## MENU DETAILS
 
-The first three options on the menu are tests to perform that the graph structure is built correctly and BFS/DFS algorithms are correctly
-implemented. These options will parse the "test_airports.dat" and "test_routes.dat" data files, two smaller sublists of data from the OpenFlights
-datasets that each contain ten data entries. The output for each will be directly printed to the console in a readable way such that the user can 
-draw out the graph on their own and verify that the output is correct, as well as be able to track the order of which BFS/DFS visits each vertex 
-and edge. For vertex labels, a 0 represents an unvisited node (never appears in output) and a 1 respresents a visited node. For edges, a 0 is
-undiscovered, a 1 is discovery, and a 2 is a cross edge.
+The first three options on the menu are tests to verify that the graph structure and BFS/DFS algorithms are correctly implemented. 
+These options will parse the "test_airports.dat" and "test_routes.dat" data files, two smaller sublists of data from the OpenFlights
+datasets that each contain ten data entries. The outputs for each will be directly printed to the console in a readable way so that the user can 
+draw out the graph on their own and verify that the output is correct, as well as be able to track the order in which BFS/DFS visits each vertex 
+and edge. For vertex labels, a 0 label represents an unvisited node (never appears in output) and a 1 respresents a visited node. For edges, a 0 is
+undiscovered, a 1 is discovery, and a 2 is a cross/back edge.
 
 The fourth and fifth options on the menu verify Dijkstra's and the Landmark algorithm on separate sample test graphs, not one of the test data
 files. The data will be displayed for each graph before running each algorithm so that the graph can be drawn on paper and the algorithms can be 
@@ -34,10 +34,10 @@ verified.
 The sixth and seventh options on the menu are used to run Dijkstra's and Landmark on user-inputted airports. Option 6 will specifically find the
 shortest route between two user-inputted ICAO codes and will display the path of vertices that must be traversed to get from the first airport to
 the second. Option 7 is similar, but is used with a third airport input to see the shortest route between the first two that goes through the third
-airport. Again, the 4-digit ICAO codes must be entered and no other input; other input or an airport not in the graph will prompt the program
+airport. Again, the 4-digit ICAO codes must be entered and no other input; invalid input or an airport not in the graph will prompt the program
 to display an error message and ask to retry input.
 
-Option 8 uses two user inputted airports to check if there exists an edge between them, option 9 displays the degree of a given airport vertex, and
+Option 8 uses two user-inputted airports to check if there exists an edge between them, option 9 displays the degree of a given airport vertex, and
 option 10 displays miscellaneous information about the airport. Exit the program by inputting 11 on the keyboard.
 
 
