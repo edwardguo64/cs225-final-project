@@ -1,5 +1,5 @@
 # CS 225 Final Project: OpenFlights Dataset
-## eguo4-gloriax2-lclee3-tkurdu2
+**NetIDs:** eguo4-gloriax2-lclee3-tkurdu2
 **PURPOSE**: Analyze OpenFlights routes and airports datasets by implementing BFS, DFS, Dijkstra's algorithm, and the Landmark Path algorithm. Data from given text files are processed into an efficient graph structure, and there are several user options to test the functionality of the graph.
 
 **AUTHORS**: Calvin Lee, Edward Guo, Tejus Kurdukar, Gloria Xiao
@@ -8,7 +8,7 @@
 
 **HOW TO START**: Compile by running "make", then execute ./airports
 
-<center><font size="4"><b>**--------USER INSTRUCTIONS--------**</b></font></center>
+## USER INSTRUCTIONS
 
 When running ./airports, a menu will display various options to analyze the flights data structure, and a number must be entered
 followed by the enter key to choose an option. Note that the graph is built such that each vertex represents an airport and an edge exists between
@@ -17,7 +17,7 @@ source or a destination of a route that it is connected to. Note that for each m
 of the airport must be entered, not the 3-digit IATA code or any other identifier. The code must be entered in capital letters. All flights
 are simplified to be traveled in a straight line.
 
-<center><font size="4"><b>**--------MENU DETAILS--------**</b></font></center>
+## MENU DETAILS
 
 The first three options on the menu are tests to perform that the graph structure is built correctly and BFS/DFS algorithms are correctly
 implemented. These options will parse the "test_airports.dat" and "test_routes.dat" data files, two smaller sublists of data from the OpenFlights
