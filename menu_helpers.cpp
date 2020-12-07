@@ -30,9 +30,9 @@ void shortestPath(Graph & g) {
         cin >> icao2;
 
         if (g.getID(icao1) == -1) {
-			cout << "The first airport is nonexistent. Try again" << endl;
+			cout << "\nThe first airport does not exist in this dataset. Try again:" << endl;
 		} else if(g.getID(icao2) == -1) {
-			cout << "The second airport is nonexistent. Try again" << endl;
+			cout << "\nThe second airport does not exist in this dataset. Try again:" << endl;
         }
     } while (g.getID(icao1) == -1 || g.getID(icao2) == -1);
 
@@ -44,7 +44,7 @@ void shortestPath(Graph & g) {
 
     // displays the result
     if (route == list<Graph::Vertex>()) {
-        cout << "\nThe airports are not connected. No path was found between the two airports" << endl;
+        cout << "\nThe airports are not connected in this dataset. No path was found between the two airports" << endl;
     } else {
         cout << "\nThe shortest route between " << icao1 << " and " << icao2 << " go through the following airports:" << endl << endl;
         for (Graph::Vertex &v : route) {
@@ -72,15 +72,15 @@ void shortestPath_landmark(Graph & g) {
 
 		if (g.getID(icao1) == -1)
 		{
-			cout << "The first airport is nonexistent. Try again" << endl;
+			cout << "\nThe first airport does not exist in this dataset. Try again:" << endl;
 		}
 		else if (g.getID(icao2) == -1)
 		{
-			cout << "The second airport is nonexistent. Try again" << endl;
+			cout << "\nThe second airport does not exist in this dataset. Try again:" << endl;
 		}
         else if (g.getID(icao_stop) == -1)
 		{
-			cout << "The landmark airport is nonexistent. Try again" << endl;
+			cout << "\nThe landmark airport does not exist in this dataset. Try again:" << endl;
 		}
 	} while (g.getID(icao1) == -1 || g.getID(icao2) == -1 || g.getID(icao_stop) == -1);
 
@@ -92,7 +92,7 @@ void shortestPath_landmark(Graph & g) {
 
     // displays the result
     if (route == list<Graph::Vertex>()) {
-        cout << "\nThe airports are not connected. No path was found between the two airports through the landmark" << endl;
+        cout << "\nThe airports are not connected in this dataset. No path was found between the two airports through the landmark" << endl;
     } else {
         cout << "\nThe shortest route between " << icao1 << " and " << icao2 << " through " << icao_stop <<  " go through the following airports:" << endl << endl;
         for (Graph::Vertex &v : route) {
@@ -129,11 +129,11 @@ void connection_exists(Graph & g){
 
 		if (g.getID(icao1) == -1)
 		{
-			cout << "The first airport is nonexistent. Try again" << endl;
+			cout << "\nThe first airport does not exist in this dataset. Try again:" << endl;
 		}
 		else if (g.getID(icao2) == -1)
 		{
-			cout << "The second airport is nonexistent. Try again" << endl;
+			cout << "\nThe second airport does not exist in this dataset. Try again:" << endl;
 		}
 	} while (g.getID(icao1) == -1 || g.getID(icao2) == -1);
 
@@ -158,7 +158,7 @@ void num_routes(Graph & g){
         cin >> icao;
 
         if (g.getID(icao) == -1) {
-			cout << "The airport is nonexistent. Try again" << endl;
+			cout << "\nThe airport does not exist in this dataset. Try again:" << endl;
 		} 
     } while (g.getID(icao) == -1);
 
@@ -181,13 +181,13 @@ void list_routes(Graph & g){
         cin >> icao;
 
         if (g.getID(icao) == -1) {
-			cout << "The airport is nonexistent. Try again" << endl;
+			cout << "\nThe airport does not exist in this dataset. Try again:" << endl;
 		} 
     } while (g.getID(icao) == -1);
 
     vector<Graph::Vertex> adjacent = g.getAdjacent(g.ID_to_Vertex(g.getID(icao)));
     
-    cout << "\nThe airports have direct connections from the airport " << icao << " are:" << endl << endl;
+    cout << "\nThe airports that have direct connections from the airport " << icao << " are:" << endl << endl;
     for (size_t i = 0; i < adjacent.size(); i++){
         if (i == adjacent.size() - 1) {
             cout << adjacent[i].ICAO_ << endl;
@@ -210,7 +210,7 @@ void cool_info(Graph & g)
         cin >> icao;
         
         if (g.getID(icao) == -1) {
-			cout << "The airport is nonexistent. Try again" << endl;
+			cout << "\nThe airport does not exist in this dataset. Try again:" << endl;
 		}
     } while (g.getID(icao) == -1);
 
