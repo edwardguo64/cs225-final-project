@@ -12,8 +12,9 @@ void print_main_menu()
 	cout << "    7) Find shortest route between two airports that passes through another airport" << endl;
 	cout << "    8) Does a direct flight exist between these two airports" << endl;
 	cout << "    9) Number of routes from an airport" << endl;
-    cout << "   10) Find out more information about a particular airport" << endl;
-	cout << "   11) Quit" << endl;
+    cout << "   10) List out all flights that connect with an airport" << endl;
+    cout << "   11) Find out more information about a particular airport" << endl;
+	cout << "   12) Quit" << endl;
 }
 
 void shortestPath(Graph & g) {
@@ -170,6 +171,33 @@ void num_routes(Graph & g){
 	cout << "\nThis airport has " << adjacent.size() << " routes "<< endl;
 }
 
+void list_routes(Graph & g){
+    string icao;
+
+    // prompts the user to input an airport, looping to ensure that the user inputs a valid ICAO code
+    cout << "\nEnter the airport you want to see the list of routes for: " << endl;
+    do {
+        cout << "Airport ICAO: ";
+        cin >> icao;
+
+        if (g.getID(icao) == -1) {
+			cout << "The airport is nonexistent. Try again" << endl;
+		} 
+    } while (g.getID(icao) == -1);
+
+    vector<Graph::Vertex> adjacent = g.getAdjacent(g.ID_to_Vertex(g.getID(icao)));
+    
+    cout << "\nThe airports have direct connections from the airport " << icao << " are:" << endl << endl;
+    for (size_t i = 0; i < adjacent.size(); i++){
+        if (i == adjacent.size() - 1) {
+            cout << adjacent[i].ICAO_ << endl;
+        } else {
+            if(i != 0 && i % 15 == 0) cout << endl; // prints out 15 airport ICAOs per line
+            cout << adjacent[i].ICAO_ << ", ";
+        }
+	}
+}
+
 void cool_info(Graph & g)
 {
     string icao;
@@ -192,7 +220,7 @@ void cool_info(Graph & g)
     cout << "\nAirport Name: " << v.name_ << endl;
     cout << "Airport is located in: " << v.city_ << ", " << v.country_ << endl;
     cout << "Airport has IATA code: " << v.IATA_ << endl;
-    cout << "Airport has ICAO_ code: " << v.ICAO_ << endl;
+    cout << "Airport has ICAO code: " << v.ICAO_ << endl;
     cout << "Airport has OpenFlights ID: " << v.airportID_ << endl;
     cout << "Airport Latitude: " << v.latitude_ << endl;
     cout << "Airport Longitude: " << v.longitude_ << endl;

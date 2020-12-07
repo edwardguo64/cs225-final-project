@@ -39,7 +39,11 @@ the second. Option 7 is similar, but is used with a third airport input to see t
 airport. Again, the 4-digit ICAO codes must be entered and no other input; invalid input or an airport not in the graph will prompt the program
 to display an error message and ask to retry input.
 
-Option 8 uses two user-inputted airports to check if there exists an edge between them, option 9 displays the degree of a given airport vertex, and
-option 10 displays miscellaneous information about the airport. Exit the program by inputting 11 on the keyboard.
+Option 8 uses two user-inputted airports to check if there exists an edge between them.
+Option 9 displays the degree of a given airport vertex.
+Option 10 prints the ICAO codes of all of the adjacent airports of a given airport vertex.
+Option 11 displays miscellaneous information about the airport. 
+
+Exit the program by inputting 12 on the keyboard.
 
 

@@ -31,6 +31,9 @@ void connection_exists(Graph & g);
 //prompts the user for an airport and prints the total number of routes from that airport
 void num_routes(Graph & g);
 
+// prints out ICAOs of all airports that have a direct flight between user inputted airports
+void list_routes(Graph & g);
+
 // prints the information of an airport the user wants to know about
 void cool_info(Graph & g);
 

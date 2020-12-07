@@ -48,7 +48,7 @@ int main()
         }
     } while (!valid);
 
-	while (std::stoi(choice) != 11)
+	while (std::stoi(choice) != 12)
 	{
 		switch (std::stoi(choice))
 		{
@@ -89,6 +89,10 @@ int main()
             print_main_menu();
             break;
         case 10:
+            list_routes(g);
+            print_main_menu();
+            break;
+        case 11:
             cool_info(g);
             print_main_menu();
             break;
