@@ -66,6 +66,7 @@ void shortestPath_landmark(Graph & g) {
         cin >> icao2;
 
         cout << "Enter the airport you want to pass along the route: " << endl;
+        cout << "Airport ICAO: ";
 		cin >> icao_stop;
 
 		if (g.getID(icao1) == -1)
@@ -195,13 +196,10 @@ void cool_info(Graph & g)
     cout << "Airport has OpenFlights ID: " << v.airportID_ << endl;
     cout << "Airport Latitude: " << v.latitude_ << endl;
     cout << "Airport Longitude: " << v.longitude_ << endl;
-
 }
 
 void dijkstra_test(Graph & g) {
-
     // Following code tests Dijkstra's algorithm based on a small hand-drawn graph.
-    // D.
     double distance = 0;
 
     g.printVertex();
@@ -245,14 +243,9 @@ void dijkstra_test(Graph & g) {
         cout<<g.Vertex_to_ID(*it)<<" ";
     }
     cout << endl;
-    
-
-
-
 }
 
 void landmark_test(Graph & g) {
-
     double distance = 0;
 	list<Graph::Vertex> land_list;
 
@@ -279,5 +272,4 @@ void landmark_test(Graph & g) {
         cout<<g.Vertex_to_ID(*it)<<" ";
     }
     cout << endl;
-    
 }
