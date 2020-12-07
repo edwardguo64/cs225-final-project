@@ -10,7 +10,7 @@ void print_main_menu()
     cout << "    5) Verify Landmark algorithm on sample test graph" << endl;
 	cout << "    6) Find shortest route between two airports" << endl;
 	cout << "    7) Find shortest route between two airports that passes through another airport" << endl;
-	cout << "    8) Does a connection exist between these two airports" << endl;
+	cout << "    8) Does a direct flight exist between these two airports" << endl;
 	cout << "    9) Number of routes from an airport" << endl;
     cout << "   10) Find out more information about a particular airport" << endl;
 	cout << "   11) Quit" << endl;
@@ -19,7 +19,8 @@ void print_main_menu()
 void shortestPath(Graph & g) {
     string icao1, icao2;
 
-    cout << "Enter the two airports you want to find the shortest route between: " << endl;
+    // prompts the user to input two airports, looping to ensure that the user inputs valid ICAO codes
+    cout << "\nEnter the two airports you want to find the shortest route between: " << endl;
     do {
         cout << "Airport ICAO 1: ";
         cin >> icao1;
@@ -36,13 +37,15 @@ void shortestPath(Graph & g) {
 
     int id1 = g.getID(icao1), id2 = g.getID(icao2);
 
+    // performs Dijstra's algorithm to find the shortest route and record the total distance
     double distance = 0;
     list<Graph::Vertex> route = g.Dijkstra(id1, id2, &distance);
 
+    // displays the result
     if (route == list<Graph::Vertex>()) {
-        cout << "The airports are not connected. No path was found between the two airports" << endl;
+        cout << "\nThe airports are not connected. No path was found between the two airports" << endl;
     } else {
-        cout << "The shortest route between " << icao1 << " and " << icao2 << " go through the following airports:" << endl << endl;
+        cout << "\nThe shortest route between " << icao1 << " and " << icao2 << " go through the following airports:" << endl << endl;
         for (Graph::Vertex &v : route) {
             cout << v.ICAO_ << endl;
         }
@@ -50,12 +53,11 @@ void shortestPath(Graph & g) {
 	}
 }
 
-
-
 void shortestPath_landmark(Graph & g) {
     string icao1, icao2, icao_stop;
 
-    cout << "Enter the two airports you want to find the shortest route between: " << endl;
+    // prompts the user to input three airports, looping to ensure that the user inputs valid ICAO codes
+    cout << "\nEnter the two airports you want to find the shortest route between and the airport you want to pass along: " << endl;
     do {
         cout << "Airport ICAO 1: ";
         cin >> icao1;
@@ -82,19 +84,22 @@ void shortestPath_landmark(Graph & g) {
 
     int id1 = g.getID(icao1), id2 = g.getID(icao2), id_stop = g.getID(icao_stop);
 
+    // performs landmark path algorithm to find the shortest route and record the total distance
     double distance = 0;
     list<Graph::Vertex> route = g.landmark(id1, id_stop, id2, &distance);
 
+    // displays the result
     if (route == list<Graph::Vertex>()) {
-        cout << "The airports are not connected. No path was found between the two airports through the landmark" << endl;
+        cout << "\nThe airports are not connected. No path was found between the two airports through the landmark" << endl;
     } else {
-        cout << "The shortest route between " << icao1 << " and " << icao2 << " through " << icao_stop <<  " go through the following airports:" << endl << endl;
+        cout << "\nThe shortest route between " << icao1 << " and " << icao2 << " through " << icao_stop <<  " go through the following airports:" << endl << endl;
         for (Graph::Vertex &v : route) {
             cout << v.ICAO_ << endl;
         }
         cout << "\nThe distance between the two airports through the landmark is " << std::trunc(distance) << " km." << endl;
 	}
 }
+
 void display_graph(Graph & g){
    g.printVertex();
    g.printEdge(); 
@@ -110,6 +115,9 @@ void perform_DFS(Graph & g){
 
 void connection_exists(Graph & g){
     string icao1, icao2;
+    
+    // prompts the user to input two airports, looping to ensure that the user inputs valid ICAO codes
+    cout << "\nEnter the two airports you want to check if there is a direct route between: " << endl;
     do {
         cout << "Airport ICAO 1: ";
         cin >> icao1;
@@ -129,37 +137,44 @@ void connection_exists(Graph & g){
 
     Graph::Vertex v1 = g.ID_to_Vertex(g.getID(icao1));
     Graph::Vertex v2 = g.ID_to_Vertex(g.getID(icao2));
+    
+    // displays the information if the two airports are connected or not with a direct route
     if(g.areAdjacent(v1, v2)) {
-        cout << "There exists a direct flight between " << icao1 << " and " << icao2 << "." << endl;
+        cout << "\nThere exists a direct flight between " << icao1 << " and " << icao2 << "." << endl;
     } else {
-        cout << "There does not exist a direct flight between " << icao1 << " and " << icao2 << "." << endl;
+        cout << "\nThere does not exist a direct flight between " << icao1 << " and " << icao2 << "." << endl;
     }
 }
 
 void num_routes(Graph & g){
     string icao;
 
-    cout << "Enter the airport you want to find the number of routes from: " << endl;
+    // prompts the user to input an airport, looping to ensure that the user inputs a valid ICAO code
+    cout << "\nEnter the airport you want to find the number of routes from: " << endl;
     do {
         cout << "Airport ICAO: ";
         cin >> icao;
 
         if (g.getID(icao) == -1) {
-			cout << "The first airport is nonexistent. Try again" << endl;
+			cout << "The airport is nonexistent. Try again" << endl;
 		} 
     } while (g.getID(icao) == -1);
 
     int id1 = g.getID(icao);
 	vector<Graph::Vertex> adjacent;
     Graph::Vertex v = g.ID_to_Vertex(id1);
+    
+    // displays the number of adjacent edges from that airport as routes
     adjacent=g.getAdjacent(v);
-	cout << "This airport has " << adjacent.size() << " routes "<< endl;
+	cout << "\nThis airport has " << adjacent.size() << " routes "<< endl;
 }
 
 void cool_info(Graph & g)
 {
     string icao;
-    cout << "Enter the airport you want to learn more information about: " << endl;
+
+    // prompts the user to input an airport, looping to ensure that the user inputs a valid ICAO code
+    cout << "\nEnter the airport you want to learn more information about: " << endl;
     do {
     
         cout << "Airport ICAO: ";
@@ -172,6 +187,7 @@ void cool_info(Graph & g)
 
     Graph::Vertex v = g.ID_to_Vertex(g.getID(icao));
 
+    // displays the airport information
     cout << "\nAirport Name: " << v.name_ << endl;
     cout << "Airport is located in : " << v.city_ << ", " << v.country_ << endl;
     cout << "Airport has IATA code: " << v.IATA_ << endl;
@@ -182,10 +198,10 @@ void cool_info(Graph & g)
 
 }
 
-void djikstra_test(Graph & g) {
+void dijkstra_test(Graph & g) {
 
-    // Following Code Test Dijkstra Algorithm based on a small hand-drawn graph.
-    // You can draw it on paper to verify.
+    // Following code tests Dijkstra's algorithm based on a small hand-drawn graph.
+    // D.
     double distance = 0;
 
     g.printVertex();
@@ -239,9 +255,12 @@ void landmark_test(Graph & g) {
 
     double distance = 0;
 	list<Graph::Vertex> land_list;
+
+    //provides information on the predetermined graph
 	g.printVertex();
 	g.printEdge();
-      
+    
+    //performs several landmark tests on a predetermined graph
     land_list=g.landmark(2,5,4, &distance);  
     cout << "Test 1: Go from 2 to 4, through 5" << endl;
     for(auto it=land_list.begin();it!=land_list.end();++it){

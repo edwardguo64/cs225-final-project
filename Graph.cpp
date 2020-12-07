@@ -133,8 +133,8 @@ void Graph::parseRoute(const string & filename)
                     secondID = std::stoi(data);
                 }
                 //converts airport ID int to identify specific airport vertex
-                Vertex first_vertex = converter_.find(firstID)->second;
-                Vertex second_vertex = converter_.find(secondID)->second;
+                Vertex first_vertex = id_to_vertex_.find(firstID)->second;
+                Vertex second_vertex = id_to_vertex_.find(secondID)->second;
                 insertEdge(firstID, secondID, distance(first_vertex.latitude_, first_vertex.longitude_, 
                                                         second_vertex.latitude_, second_vertex.longitude_));
 
@@ -159,30 +159,30 @@ void Graph::insertVertex(Vertex v)
     std::pair<Vertex, list<Edge *>> ret(v, list<Edge *>());     // create pair of Vertex v and list of edge pointers
     adjacency_list_.insert(ret);                                // insert the pair to the adjacency list
     std::pair<int, Vertex> ret2(v.airportID_, v);               // create pair of int airport ID of v and Vertex v
-    converter_.insert(ret2);                                    // insert the pair to the converter map
+    id_to_vertex_.insert(ret2);                                    // insert the pair to the converter map
 }
 
 // Needs to check if either (u, v) or (v, u) is in the graph already.
 void Graph::insertEdge(int first, int second, double weight)
 {
     //if first airport does not exist disregard
-    if(converter_.find(first) == converter_.end())  
+    if(id_to_vertex_.find(first) == id_to_vertex_.end())  
     {
        return;
     }
     //if second airport does not exist disregard
-    if(converter_.find(second) == converter_.end()) 
+    if(id_to_vertex_.find(second) == id_to_vertex_.end()) 
     {
         return;
     }
     //if an edge already exists between these two airports disregard
-    if(areAdjacent(converter_.find(first)->second, converter_.find(second)->second) != NULL)
+    if(areAdjacent(id_to_vertex_.find(first)->second, id_to_vertex_.find(second)->second) != NULL)
     {
         return;
     }
     //converts airport ID int to the actual airport Vertex
-    Vertex first_vertex = converter_.find(first)->second;
-    Vertex second_vertex = converter_.find(second)->second;
+    Vertex first_vertex = id_to_vertex_.find(first)->second;
+    Vertex second_vertex = id_to_vertex_.find(second)->second;
 
     //creates a new edge between first and second airports
     Edge e(&(adjacency_list_.find(first_vertex)->first), &(adjacency_list_.find(second_vertex)->first), weight);
@@ -415,9 +415,9 @@ void Graph::printEdge()
 list<Graph::Vertex> Graph::Dijkstra(int sourceID, int destID, double * distance)
 {
     // Source Vertex
-    Vertex v_source = converter_.find(sourceID)->second;
+    Vertex v_source = id_to_vertex_.find(sourceID)->second;
     // Destination Vertex
-    Vertex v_dest = converter_.find(destID)->second;
+    Vertex v_dest = id_to_vertex_.find(destID)->second;
 
     // The shortest path between source and destination vertex.
     list<Vertex> ret;
@@ -453,7 +453,7 @@ list<Graph::Vertex> Graph::Dijkstra(int sourceID, int destID, double * distance)
     map<Vertex, Vertex> vertex_to_prev;
     map<Vertex, bool> vertex_to_visited;
 
-    // dist[source] ??0
+    // dist[source] = 0
     vertex_to_dist.insert(std::pair<Vertex, double>(v_source, 0));
     vertex_to_prev.insert(std::pair<Vertex, Vertex>(v_source, v_source));
     vertex_to_visited.insert(std::pair<Vertex, bool>(v_source, false));
@@ -465,12 +465,12 @@ list<Graph::Vertex> Graph::Dijkstra(int sourceID, int destID, double * distance)
     vector<Vertex> all_v = getVertices();
     for(auto it = all_v.begin(); it != all_v.end(); it++)
     { 
-        // if v ??source
+        // if v = source
         if(!(*it == v_source))
         {
-            // dist[v] ??INFINITY
+            // dist[v] = INFINITY
             vertex_to_dist.insert(std::pair<Vertex, double>(*it, std::numeric_limits<double>::infinity()));
-            // prev[v] ??UNDEFINED
+            // prev[v] = UNDEFINED
             vertex_to_prev.insert(std::pair<Vertex, Vertex>(*it, *it));
             vertex_to_visited.insert(std::pair<Vertex, bool>(*it, false));
         }
@@ -479,12 +479,12 @@ list<Graph::Vertex> Graph::Dijkstra(int sourceID, int destID, double * distance)
     // while Q is not empty:
     while(Q.empty() == false)
     {
-        // u ??Q.extract_min()
+        // u = Q.extract_min()
         pq_elem u = Q.top();
         Q.pop();
         
 
-        // if p ??dist[u]
+        // if p <= dist[u]
         if(u.dist_ <= vertex_to_dist.find(u.v_)->second)
         {
             vertex_to_visited.find(u.v_)->second = true;
@@ -502,15 +502,15 @@ list<Graph::Vertex> Graph::Dijkstra(int sourceID, int destID, double * distance)
             {
                 if(vertex_to_visited.find(v)->second == false)
                 {
-                    // alt ??dist[u] + length(u, v)
+                    // alt = dist[u] + length(u, v)
                     double alt = vertex_to_dist.find(u.v_)->second + areAdjacent(u.v_, v)->weight_;
 
                     // if alt < dist[v]
                     if(alt < vertex_to_dist.find(v)->second)
                     {
-                        // dist[v] ??alt
+                        // dist[v] = alt
                         vertex_to_dist.find(v)->second = alt;
-                        // prev[v] ??u
+                        // prev[v] = u
                         vertex_to_prev.find(v)->second = u.v_;
                         // Q.decrease_priority(v, alt)
                         Q.push(pq_elem(v, alt));
@@ -573,10 +573,9 @@ list<Graph::Vertex> Graph::landmark(int sourceID, int stopID, int destID, double
 }
 
 Graph::Vertex Graph::ID_to_Vertex(int portID){
-	return converter_.find(portID)->second;
+	return id_to_vertex_.find(portID)->second;     //returns respective Vertex given airport ID
 }
 
-int Graph::Vertex_to_ID(Vertex v)
-{
-    return v.airportID_;
+int Graph::Vertex_to_ID(Vertex v){
+    return v.airportID_;                        //returns Vertex's airport ID
 }

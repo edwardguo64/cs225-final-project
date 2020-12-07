@@ -1,7 +1,7 @@
 #include "menu_helpers.h"
 #include <iostream>
-
-
+#include <string>
+using std::string;
 
 int main()
 {
@@ -27,15 +27,30 @@ int main()
     test.insertEdge(4,6,2);
     test.insertEdge(5,6,4);
 
-    int choice;
+    string choice;
     print_main_menu();
+    bool valid = true;
     
-    cout << "\nChoice: ";
-	cin >> choice;
+    do {
+        cout << "\nChoice: ";
+        cin >> choice;
 
-	while (choice != 11)
+        valid = true;
+        for (size_t i = 0; i < choice.size(); i++) {
+            if (!isdigit(choice[i])) {
+                valid = false;
+            }
+        }
+
+        if (!valid) {
+            cout << "\nThat is an invalid choice, please try again." << endl;
+            print_main_menu();
+        }
+    } while (!valid);
+
+	while (std::stoi(choice) != 11)
 	{
-		switch (choice)
+		switch (std::stoi(choice))
 		{
 		case 1:
             display_graph(g_sublist);
@@ -50,7 +65,7 @@ int main()
 			print_main_menu();
 			break;
         case 4:
-            djikstra_test(test);
+            dijkstra_test(test);
             print_main_menu();
             break;
         case 5:
@@ -83,8 +98,22 @@ int main()
 			break;
 		}
 
-		cout << "\nChoice: ";
-		cin >> choice;
+		do {
+            cout << "\nChoice: ";
+            cin >> choice;
+
+            valid = true;
+            for (size_t i = 0; i < choice.size(); i++) {
+                if (!isdigit(choice[i])) {
+                    valid = false;
+                }
+            }
+
+            if (!valid) {
+                cout << "\nThat is an invalid choice, please try again." << endl;
+                print_main_menu();
+            }
+        } while (!valid);
 	}
 	return 0;
 }
