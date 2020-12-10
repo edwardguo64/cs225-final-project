@@ -142,9 +142,9 @@ void connection_exists(Graph & g){
     
     // displays the information if the two airports are connected or not with a direct route
     if(g.areAdjacent(v1, v2)) {
-        cout << "\nThere exists a direct flight between " << icao1 << " and " << icao2 << "." << endl;
+        cout << "\nThere exists a direct flight between " << icao1 << " and " << icao2 << " in this dataset." << endl;
     } else {
-        cout << "\nThere does not exist a direct flight between " << icao1 << " and " << icao2 << "." << endl;
+        cout << "\nThere does not exist a direct flight between " << icao1 << " and " << icao2 << " in this dataset." << endl;
     }
 }
 
@@ -168,7 +168,7 @@ void num_routes(Graph & g){
     
     // displays the number of adjacent edges from that airport as routes
     adjacent=g.getAdjacent(v);
-	cout << "\nThis airport has " << adjacent.size() << " routes "<< endl;
+	cout << "\nThis airport has " << adjacent.size() << " routes in this dataset."<< endl;
 }
 
 void list_routes(Graph & g){
@@ -187,7 +187,7 @@ void list_routes(Graph & g){
 
     vector<Graph::Vertex> adjacent = g.getAdjacent(g.ID_to_Vertex(g.getID(icao)));
     
-    cout << "\nThe airports that have direct connections from the airport " << icao << " are:" << endl << endl;
+    cout << "\nThe airports that have direct connections in this dataset from the airport " << icao << " are:" << endl << endl;
     for (size_t i = 0; i < adjacent.size(); i++){
         if (i == adjacent.size() - 1) {
             cout << adjacent[i].ICAO_ << endl;
