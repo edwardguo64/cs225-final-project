@@ -241,21 +241,21 @@ void dijkstra_test(Graph & g) {
     cout << "\nThe distance between the two vertices is: " << distance << endl;
     cout << endl;
     land_list=g.Dijkstra(1,2, &distance);  
-    cout << "Test 1: Shortest path from 1 to 2" << endl;
+    cout << "Test 2: Shortest path from 1 to 2" << endl;
     for(auto it=land_list.begin();it!=land_list.end();++it){
         cout<<g.Vertex_to_ID(*it)<<" ";
     }
     cout << "\nThe distance between the two vertices is: " << distance << endl;
     cout << endl;
     land_list=g.Dijkstra(3,6, &distance);  
-    cout << "Test 1: Shortest path from 3 to 6" << endl;
+    cout << "Test 3: Shortest path from 3 to 6" << endl;
     for(auto it=land_list.begin();it!=land_list.end();++it){
         cout<<g.Vertex_to_ID(*it)<<" ";
     }
     cout << "\nThe distance between the two vertices is: " << distance << endl;
     cout << endl;
     land_list=g.Dijkstra(2,5, &distance);  
-    cout << "Test 1: Shortest path from 2 to 5" << endl;
+    cout << "Test 4: Shortest path from 2 to 5" << endl;
     for(auto it=land_list.begin();it!=land_list.end();++it){
         cout<<g.Vertex_to_ID(*it)<<" ";
     }
@@ -264,14 +264,14 @@ void dijkstra_test(Graph & g) {
     
     // Correctly returns path of length 0 with 1 vertex on the path.
     land_list=g.Dijkstra(1,1, &distance);  
-    cout << "Test 1: Shortest path from 1 to 1" << endl;
+    cout << "Test 5: Shortest path from 1 to 1" << endl;
     for(auto it=land_list.begin();it!=land_list.end();++it){
         cout<<g.Vertex_to_ID(*it)<<" ";
     }
     cout << "\nThe distance between the two vertices is: " << distance << endl;
     cout << endl;
     land_list=g.Dijkstra(6,6, &distance); 
-    cout << "Test 1: Shortest path from 6 to 6" << endl;
+    cout << "Test 6: Shortest path from 6 to 6" << endl;
     for(auto it=land_list.begin();it!=land_list.end();++it){
         cout<<g.Vertex_to_ID(*it)<<" ";
     }
