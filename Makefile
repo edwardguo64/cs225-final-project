@@ -54,4 +54,6 @@ output_msg: ; $(CLANG_VERSION_MSG)
 # tests.o: tests/tests.cpp tests/catch.hpp cs225/PNG.h cs225/HSLAPixel.h
 #	$(CXX) $(CXXFLAGS) tests/tests.cpp
     
-.PHONY: output_msg
+.PHONY: output_msg, clean
+clean:
+	rm -f airports *.o */*.o
