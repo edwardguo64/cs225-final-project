@@ -1,4 +1,7 @@
 # CS 225 Final Project: OpenFlights Dataset
+
+Please cite this github repository if you decide to use this as reference for UIUC's CS 225 final project. Not doing so would violate academic integrity.
+
 **NetIDs:** eguo4-gloriax2-lclee3-tkurdu2
 
 **PURPOSE**: Analyze OpenFlights routes and airports datasets by implementing BFS, DFS, Dijkstra's algorithm, and the Landmark Path algorithm. Data from given text files are processed into an efficient graph structure, and there are several user options to test the functionality of the graph.
@@ -8,6 +11,12 @@
 **VERSION**: 12/7/2020
 
 **HOW TO START**: Compile by running "make", then execute ./airports
+
+## Table of Contents
+
+1. [User Instructions](#user-instructions)
+2. [Menu Details](#menu-details)
+3. [Presentation Video](#presentation-video)
 
 ## USER INSTRUCTIONS
 
